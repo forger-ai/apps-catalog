@@ -5,8 +5,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: sqlite:////app/data/finance_os.sqlite
-      CORS_ORIGINS: http://localhost:5180,http://127.0.0.1:5180
+      DATABASE_URL: sqlite:////app/data/app.sqlite
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
     volumes:
       - ./backend:/app
       - ./backend/data:/app/data
@@ -19,14 +19,14 @@ services:
     build:
       context: ./frontend
     ports:
-      - "5180:5180"
+      - "5173:5173"
     environment:
       VITE_API_BASE_URL: http://localhost:8000
     volumes:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
       - ../commons/frontend/client.ts:/app/src/api/client.ts
-    command: npm run dev -- --host 0.0.0.0 --port 5180
+    command: npm run dev -- --host 0.0.0.0 --port 5173
     depends_on:
       - backend
 

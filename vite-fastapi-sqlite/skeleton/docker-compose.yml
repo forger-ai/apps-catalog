@@ -9,7 +9,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: sqlite:////app/data/app.sqlite
+      DATABASE_URL: sqlite:////app/data/app.dev.sqlite
       CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
     volumes:
       - ./backend:/app

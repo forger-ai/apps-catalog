@@ -50,6 +50,7 @@ package_app() {
     --exclude '.git/' --exclude '.gitignore' --exclude '.DS_Store' \
     --exclude '.idea/' --exclude '.vscode/' \
     --exclude 'AGENTS.md' --exclude 'tmp/' \
+    --exclude 'commons' \
     --exclude 'backend/.venv/' --exclude 'backend/.ruff_cache/' \
     --exclude 'backend/.pytest_cache/' --exclude 'backend/.mypy_cache/' \
     --exclude 'backend/**/__pycache__/' --exclude 'backend/**/*.pyc' \
@@ -58,6 +59,19 @@ package_app() {
     --exclude 'frontend/.vite/' --exclude 'frontend/*.tsbuildinfo' \
     --exclude 'scripts/' \
     "$app_dir/" "$stage_dir/$app_name/"
+
+  # Copy commons files directly into the app (symlink doesn't survive the zip)
+  local commons_be
+  commons_be="$(dirname "$app_dir")/commons/backend"
+  local commons_fe
+  commons_fe="$(dirname "$app_dir")/commons/frontend"
+
+  if [[ -d "$commons_be" ]]; then
+    cp "$commons_be"/*.py "$stage_dir/$app_name/backend/app/"
+  fi
+  if [[ -d "$commons_fe" ]]; then
+    cp "$commons_fe"/*.ts "$stage_dir/$app_name/frontend/src/api/"
+  fi
 
   # Defensive cleanup
   find "$stage_dir/$app_name/backend" -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true

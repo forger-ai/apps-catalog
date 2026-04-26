@@ -24,7 +24,12 @@
     "description": "Full description shown on the app detail page.",
     "category": "utilities",
     "permissions": ["app_data"],
-    "supported_platforms": ["darwin_arm64", "darwin_x64"]
+    "supported_platforms": ["darwin_arm64", "darwin_x64"],
+    "release": {
+      "repository": "owner/app-repo",
+      "tag_template": "{name}/v{version}",
+      "asset_name_template": "{name}-{version}.zip"
+    }
   },
   "services": [
     {

@@ -50,6 +50,24 @@ Every app must have a `manifest.json` at its root. Required fields:
 }
 ```
 
+Optional release metadata inside `catalog.release` lets each app publish artifacts
+from its own repository while this repo only tracks published versions:
+
+```json
+{
+  "catalog": {
+    "release": {
+      "repository": "owner/app-repo",
+      "tag_template": "{name}/v{version}",
+      "asset_name_template": "{name}-{version}.zip",
+      "checksum_sha256": "optional-sha256",
+      "file_size_bytes": 123456,
+      "published_at": "2026-04-26T12:00:00Z"
+    }
+  }
+}
+```
+
 ## Scripts
 
 ```bash

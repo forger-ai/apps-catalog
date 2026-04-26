@@ -3,10 +3,10 @@
 Generate catalog.json from app manifests + GitHub Release metadata.
 
 Usage:
-    python3 scripts/generate_catalog.py [--out catalog.json] [--repo owner/repo]
+    python3 scripts/generate_catalog.py [--out catalog.json] [--default-repo owner/repo]
 
-Reads every manifest.json found under stack directories, fetches the latest
-GitHub Release for each app (if GITHUB_TOKEN is set), and writes a catalog.json
+Reads every manifest.json found under stack directories, fetches release
+metadata for each app, and writes a catalog.json
 consumable by the Forger desktop app.
 """
 
@@ -42,23 +42,24 @@ def find_manifests() -> list[tuple[str, dict]]:
     return results
 
 
-def gh_release_asset(repo: str, tag: str) -> dict | None:
-    """Fetch the first .zip asset from a GitHub Release via gh CLI."""
-    token = os.getenv("GITHUB_TOKEN")
-    if not token:
-        return None
+def gh_release_asset(repo: str, tag: str, expected_asset: str | None = None) -> dict | None:
+    """Fetch a zip asset from a GitHub Release via gh CLI."""
     try:
         result = subprocess.run(
             ["gh", "release", "view", tag, "--repo", repo, "--json", "assets,publishedAt"],
             capture_output=True, text=True, check=True,
         )
         data = json.loads(result.stdout)
-        zips = [a for a in data.get("assets", []) if a["name"].endswith(".zip")]
+        assets = data.get("assets", [])
+        if expected_asset:
+            zips = [a for a in assets if a.get("name") == expected_asset]
+        else:
+            zips = [a for a in assets if a.get("name", "").endswith(".zip")]
         if not zips:
             return None
         asset = zips[0]
         return {
-            "download_url": asset["url"],
+            "download_url": asset.get("url"),
             "file_size_bytes": asset["size"],
             "download_count": asset.get("downloadCount", 0),
             "published_at": data.get("publishedAt"),
@@ -67,13 +68,26 @@ def gh_release_asset(repo: str, tag: str) -> dict | None:
         return None
 
 
-def build_entry(stack: str, manifest: dict, repo: str) -> dict | None:
+def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
     name = manifest.get("name", "")
     version = manifest.get("version", "0.0.0")
     catalog_meta = manifest.get("catalog", {})
+    release_meta = catalog_meta.get("release", {})
 
-    tag = f"{name}/v{version}"
-    release = gh_release_asset(repo, tag)
+    release_repo = release_meta.get("repository", default_repo)
+    tag_template = release_meta.get("tag_template", "{name}/v{version}")
+    asset_template = release_meta.get("asset_name_template")
+    tag = tag_template.format(name=name, version=version)
+    expected_asset = asset_template.format(name=name, version=version) if asset_template else None
+
+    release = gh_release_asset(release_repo, tag, expected_asset=expected_asset)
+    fallback_download_url = (
+        f"https://github.com/{release_repo}/releases/download/{tag}/{expected_asset}"
+        if expected_asset
+        else None
+    )
+
+    resolved_download_url = fallback_download_url or (release["download_url"] if release else None)
 
     entry: dict = {
         "slug": name,
@@ -89,10 +103,10 @@ def build_entry(stack: str, manifest: dict, repo: str) -> dict | None:
             "required_node_version": manifest.get("stack", {}).get("frontend", {}).get("node_version", ""),
             "supported_platforms": catalog_meta.get("supported_platforms", ["darwin_arm64", "darwin_x64"]),
             "permissions": catalog_meta.get("permissions", ["app_data"]),
-            "download_url": release["download_url"] if release else None,
-            "file_size_bytes": release["file_size_bytes"] if release else None,
-            "checksum_sha256": None,  # set by build_package via meta.json
-            "published_at": release["published_at"] if release else None,
+            "download_url": resolved_download_url,
+            "file_size_bytes": release["file_size_bytes"] if release else release_meta.get("file_size_bytes"),
+            "checksum_sha256": release_meta.get("checksum_sha256"),
+            "published_at": release["published_at"] if release else release_meta.get("published_at"),
         },
     }
 
@@ -108,7 +122,7 @@ def build_entry(stack: str, manifest: dict, repo: str) -> dict | None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", default="catalog.json")
-    parser.add_argument("--repo", default=os.getenv("GITHUB_REPO", "forger-ai/apps-catalog"))
+    parser.add_argument("--default-repo", default=os.getenv("GITHUB_REPO", "forger-ai/apps-catalog"))
     args = parser.parse_args()
 
     manifests = find_manifests()
@@ -117,7 +131,7 @@ def main() -> None:
     catalog = []
     for stack, manifest in manifests:
         print(f"  building entry: {manifest.get('name')} ({stack})")
-        entry = build_entry(stack, manifest, args.repo)
+        entry = build_entry(stack, manifest, args.default_repo)
         if entry:
             catalog.append(entry)
 

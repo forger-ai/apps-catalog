@@ -1,0 +1,58 @@
+{
+  "name": "app-slug",
+  "version": "0.1.0",
+  "description": "Short description of what this app does.",
+  "stack": {
+    "backend": {
+      "language": "python",
+      "framework": "fastapi",
+      "package_manager": "uv",
+      "database": "sqlite",
+      "python_version": "3.12"
+    },
+    "frontend": {
+      "language": "typescript",
+      "framework": "react",
+      "bundler": "vite",
+      "ui": "mui",
+      "node_version": "20"
+    }
+  },
+  "catalog": {
+    "display_name": "App Name",
+    "short_description": "One-line description shown in the Forger catalog.",
+    "description": "Full description shown on the app detail page.",
+    "category": "utilities",
+    "permissions": ["app_data"],
+    "supported_platforms": ["darwin_arm64", "darwin_x64"]
+  },
+  "services": [
+    {
+      "name": "backend",
+      "type": "http",
+      "context": "./backend",
+      "port": 8000,
+      "command": "uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
+      "healthcheck": "/health",
+      "environment": {
+        "DATABASE_URL": "sqlite:////app/data/app.sqlite",
+        "CORS_ORIGINS": "http://localhost:5173,http://127.0.0.1:5173"
+      },
+      "volumes": [
+        { "source": "./backend", "target": "/app" },
+        { "source": "./backend/data", "target": "/app/data", "persist": true }
+      ]
+    },
+    {
+      "name": "frontend",
+      "type": "http",
+      "context": "./frontend",
+      "port": 5173,
+      "command": "npm run dev -- --host 0.0.0.0 --port 5173",
+      "environment": {
+        "VITE_API_BASE_URL": "http://localhost:8000"
+      },
+      "depends_on": ["backend"]
+    }
+  ]
+}

@@ -1,10 +1,11 @@
 services:
   backend:
     extends:
-      file: ../commons/docker-compose.base.yml
+      file: ./commons/docker-compose.base.yml
       service: backend
     build:
       context: ./backend
+      dockerfile: ../commons/backend/Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -13,16 +14,17 @@ services:
     volumes:
       - ./backend:/app
       - ./backend/data:/app/data
-      - ../commons/backend/database.py:/app/app/database.py
-      - ../commons/backend/health.py:/app/app/health.py
-      - ../commons/backend/cors.py:/app/app/cors.py
+      - ./commons/backend/database.py:/app/app/database.py
+      - ./commons/backend/health.py:/app/app/health.py
+      - ./commons/backend/cors.py:/app/app/cors.py
 
   frontend:
     extends:
-      file: ../commons/docker-compose.base.yml
+      file: ./commons/docker-compose.base.yml
       service: frontend
     build:
       context: ./frontend
+      dockerfile: ../commons/frontend/Dockerfile
     ports:
       - "5173:5173"
     environment:
@@ -30,7 +32,7 @@ services:
     volumes:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
-      - ../commons/frontend/client.ts:/app/src/api/client.ts
+      - ./commons/frontend/client.ts:/app/src/api/client.ts
     depends_on:
       - backend
 

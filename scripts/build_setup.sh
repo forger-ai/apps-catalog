@@ -38,6 +38,9 @@ sync_commons() {
 
   echo "  → $app_name"
 
+  # Create commons symlink so docker-compose can use ./commons/... paths
+  ln -sf ../commons "$app_dir/commons"
+
   # Backend commons
   if [[ -d "$commons_be" && -d "$app_dir/backend" ]]; then
     local be_target

@@ -1,4 +1,4 @@
-# FinanceOS Lite
+# Finance OS
 
 Aplicación personal para consolidar, revisar y clasificar movimientos financieros con ayuda de agentes. Esta versión "Lite" del proyecto FinanceOS reemplaza el stack original Next.js + Prisma + PostgreSQL por un stack más liviano y portable: **FastAPI + SQLite + Vite + React**, ideal para correr en local con Docker o Forger.
 
@@ -13,7 +13,7 @@ La idea del proyecto sigue siendo la misma: no es un SaaS multiusuario, es una h
 ## Estructura
 
 ```
-finance-os-lite/
+finance-os/
   backend/                  Python API + scripts CLI
     app/                    FastAPI app, modelos, rutas y servicios
     scripts/                Init DB, seed, import CSV, edit, verify

@@ -5,7 +5,7 @@ description: Use when importing finance movements into this repo from CSV files,
 
 # Finance Import
 
-Use this skill when loading movements into the local FinanceOS Lite database.
+Use this skill when loading movements into the local Finance OS database.
 
 ## Workflow
 

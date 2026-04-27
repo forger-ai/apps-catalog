@@ -2,7 +2,7 @@
 
 ## Qué es este proyecto
 
-`FinanceOS Lite` es la versión liviana de FinanceOS: una herramienta personal para registrar, revisar y reclasificar movimientos financieros con apoyo de agentes.
+`Finance OS` es la versión liviana de FinanceOS: una herramienta personal para registrar, revisar y reclasificar movimientos financieros con apoyo de agentes.
 
 No es una aplicación de producción generalista. No está diseñada como producto multiusuario, ni como servicio expuesto públicamente, ni con supuestos de alta escala.
 

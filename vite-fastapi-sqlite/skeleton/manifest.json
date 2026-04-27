@@ -2,6 +2,16 @@
   "name": "app-slug",
   "version": "0.1.0",
   "description": "Short description of what this app does.",
+  "changelog": [
+    {
+      "version": "0.1.0",
+      "summary": "Initial app skeleton release.",
+      "changes": [
+        "Provides the base FastAPI, SQLite, Vite, React, and MUI structure.",
+        "Includes safe packaging defaults for Forger installation."
+      ]
+    }
+  ],
   "stack": {
     "backend": {
       "language": "python",

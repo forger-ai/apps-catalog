@@ -88,6 +88,14 @@ def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
     )
 
     resolved_download_url = fallback_download_url or (release["download_url"] if release else None)
+    version_changelog = next(
+        (
+            item
+            for item in manifest.get("changelog", [])
+            if isinstance(item, dict) and item.get("version") == version
+        ),
+        None,
+    )
 
     entry: dict = {
         "slug": name,
@@ -107,6 +115,7 @@ def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
             "file_size_bytes": release["file_size_bytes"] if release else release_meta.get("file_size_bytes"),
             "checksum_sha256": release_meta.get("checksum_sha256"),
             "published_at": release["published_at"] if release else release_meta.get("published_at"),
+            "changelog": version_changelog,
         },
     }
 

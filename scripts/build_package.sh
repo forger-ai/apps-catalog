@@ -47,7 +47,7 @@ package_app() {
   trap 'rm -rf "$stage_dir"' EXIT
 
   rsync -a \
-    --exclude '.git/' --exclude '.gitignore' --exclude '.DS_Store' \
+    --exclude '.git/' --exclude '.git' --exclude '**/.git' --exclude '**/.git/' --exclude '.gitignore' --exclude '.DS_Store' \
     --exclude '.idea/' --exclude '.vscode/' \
     --exclude 'AGENTS.md' --exclude 'tmp/' \
     --exclude 'commons' \
@@ -74,6 +74,7 @@ package_app() {
   fi
 
   # Defensive cleanup
+  find "$stage_dir/$app_name" -name '.git' -exec rm -rf {} + 2>/dev/null || true
   find "$stage_dir/$app_name/backend" -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true
   find "$stage_dir/$app_name/backend" -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete 2>/dev/null || true
   find "$stage_dir/$app_name/backend/data" -type f \

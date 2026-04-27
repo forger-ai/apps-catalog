@@ -2,10 +2,14 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-APP_NAME="$(basename "$ROOT_DIR")"
-STAMP="$(date +%Y%m%d_%H%M%S)"
+APP_NAME="$(python3 -c "import json, pathlib; p=pathlib.Path('$ROOT_DIR/manifest.json'); print(json.loads(p.read_text())['name'] if p.exists() else pathlib.Path('$ROOT_DIR').name)")"
+APP_VERSION="$(python3 -c "import json, pathlib; p=pathlib.Path('$ROOT_DIR/manifest.json'); print(json.loads(p.read_text()).get('version', '0.1.0') if p.exists() else '0.1.0')")"
 OUT_DIR="${1:-$ROOT_DIR/tmp/dist}"
-OUT_FILE="${2:-$APP_NAME-$STAMP.zip}"
+OUT_FILE="${2:-$APP_NAME-$APP_VERSION.zip}"
+
+if [[ "$OUT_DIR" != /* ]]; then
+  OUT_DIR="$ROOT_DIR/$OUT_DIR"
+fi
 
 mkdir -p "$OUT_DIR"
 
@@ -17,6 +21,9 @@ rsync -a \
   \
   `# ── control de versiones ──` \
   --exclude '.git/' \
+  --exclude '.git' \
+  --exclude '**/.git' \
+  --exclude '**/.git/' \
   --exclude '.gitignore' \
   --exclude '.gitkeep' \
   --exclude '.github/' \
@@ -68,6 +75,7 @@ rsync -a \
   "$ROOT_DIR/" "$STAGE_DIR/$APP_NAME/"
 
 # Segunda pasada: limpieza defensiva por si rsync no aplica globs anidados
+find "$STAGE_DIR/$APP_NAME"          -name '.git'                 -exec rm -rf {} + 2>/dev/null || true
 find "$STAGE_DIR/$APP_NAME/backend"  -type d -name '__pycache__'   -exec rm -rf {} + 2>/dev/null || true
 find "$STAGE_DIR/$APP_NAME/backend"  -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
 find "$STAGE_DIR/$APP_NAME/backend"  -type d -name '*.egg-info'    -exec rm -rf {} + 2>/dev/null || true

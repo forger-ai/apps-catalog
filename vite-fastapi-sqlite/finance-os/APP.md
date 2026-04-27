@@ -1,8 +1,8 @@
 # APP
 
 ## Identidad
-- id: finance-os-lite
-- nombre: FinanceOS Lite
+- id: finance-os
+- nombre: Finance OS
 - version: 0.1.0
 - tipo: app de finanzas personales local
 

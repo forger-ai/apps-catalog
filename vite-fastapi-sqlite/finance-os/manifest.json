@@ -4,6 +4,17 @@
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "author": "FinanceOS",
   "license": "MIT",
+  "changelog": [
+    {
+      "version": "0.1.0",
+      "summary": "Primera version publicada de Finance OS para Forger.",
+      "changes": [
+        "Permite registrar, importar y revisar movimientos financieros locales.",
+        "Incluye backend FastAPI, frontend Vite React y almacenamiento SQLite.",
+        "Declara scripts y skill interna para carga de movimientos."
+      ]
+    }
+  ],
   "stack": {
     "backend": {
       "language": "python",

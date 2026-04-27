@@ -6,6 +6,15 @@
   "license": "MIT",
   "changelog": [
     {
+      "version": "0.1.1",
+      "summary": "Mejoras de experiencia local, agente y empaquetado para Finance OS.",
+      "changes": [
+        "Normaliza el nombre visible de la app como Finance OS.",
+        "Mejora la documentacion operacional para agentes.",
+        "Refuerza el empaquetado para distribuir la app sin metadata Git interna."
+      ]
+    },
+    {
       "version": "0.1.0",
       "summary": "Primera version publicada de Finance OS para Forger.",
       "changes": [
@@ -34,7 +43,7 @@
   "catalog": {
     "display_name": "Finance OS",
     "short_description": "Personal finance tracker with AI assistant. Your data, your machine.",
-    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances \u2014 all without sending your data anywhere.",
+    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances — all without sending your data anywhere.",
     "category": "finance",
     "permissions": [
       "app_data",

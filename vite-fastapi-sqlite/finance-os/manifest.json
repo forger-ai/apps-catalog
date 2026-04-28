@@ -1,8 +1,18 @@
 {
   "name": "finance-os",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "changelog": [
+    {
+      "version": "0.1.5",
+      "summary": "Improves AI-assisted imports, classification consistency, and review workflows.",
+      "changes": [
+        "Adds AI-assisted import and review improvements for statements and movement files.",
+        "Keeps stored movement amounts as positive magnitudes while category kind represents direction.",
+        "Enforces category and subcategory consistency across imports, edits, and verification.",
+        "Adds local data integrity verification and supporting agent guidance."
+      ]
+    },
     {
       "version": "0.1.4",
       "summary": "Refreshes agent and install documentation.",
@@ -34,7 +44,7 @@
   "catalog": {
     "display_name": "Finance OS",
     "short_description": "Personal finance tracker with AI assistant. Your data, your machine.",
-    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances \u2014 all without sending your data anywhere.",
+    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances -- all without sending your data anywhere.",
     "category": "finance",
     "capabilities": [
       {
@@ -63,11 +73,19 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/finance-os/manifest.json",
-      "checksum_sha256": "991d109d678edbbdedcc8b2c13130669499381de42bad268df6974312817ae06",
-      "file_size_bytes": 228332,
-      "published_at": "2026-04-28T15:54:09Z"
+      "checksum_sha256": "35d5f09d41a067fac5dc19a76bda4bd8df94329f52a5d58cb668aa733f646c28",
+      "file_size_bytes": 229942,
+      "published_at": "2026-04-28T21:07:09Z"
     }
   },
+  "appSecrets": [
+    {
+      "name": "openai_api_key",
+      "label": "OpenAI API Key",
+      "required": false,
+      "usage": "Permite importar movimientos desde PDFs e imagenes usando OpenAI."
+    }
+  ],
   "services": [
     {
       "name": "backend",

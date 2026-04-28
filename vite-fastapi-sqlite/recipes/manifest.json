@@ -1,0 +1,102 @@
+{
+  "name": "recipes",
+  "version": "0.1.0",
+  "description": "Local recipe manager for Forger with structured ingredients, steps, categories, favorites, notes, images, observed ingredient prices, and a weekly menu.",
+  "changelog": [
+    {
+      "version": "0.1.0",
+      "summary": "Initial Recipes app.",
+      "changes": [
+        "Browse recipes as a cookbook list, open recipe detail views, and edit from detail.",
+        "Create, edit, search, favorite, rate, and delete recipes.",
+        "Manage structured ingredients with catalog autocomplete and fixed unit options.",
+        "Administer and delete categories and ingredient catalog entries in dedicated tabs.",
+        "Track ingredient prices in separate IngredientPrice records and estimate recipe cost per serving.",
+        "Organize recipes by category, attach an image reference, and build a weekly menu with drag and drop ordering across days."
+      ]
+    }
+  ],
+  "stack": {
+    "backend": {
+      "language": "python",
+      "framework": "fastapi",
+      "package_manager": "uv",
+      "database": "sqlite",
+      "python_version": "3.12"
+    },
+    "frontend": {
+      "language": "typescript",
+      "framework": "react",
+      "bundler": "vite",
+      "ui": "mui",
+      "node_version": "24"
+    }
+  },
+  "catalog": {
+    "display_name": "Recipes",
+    "short_description": "A local cookbook with ingredient catalog, costs, and a weekly menu.",
+    "description": "Recipes helps one person keep a local cookbook with structured ingredients, ordered steps, categories, favorites, personal notes, ratings, image references, rough cost estimates from observed ingredient prices, and a weekly menu.",
+    "category": "lifestyle",
+    "permissions": [
+      "app_data"
+    ],
+    "supported_platforms": [
+      "darwin_arm64",
+      "darwin_x64"
+    ],
+    "release": {
+      "repository": "forger-ai/recipes",
+      "tag_template": "{name}/v{version}",
+      "asset_name_template": "{name}-{version}.zip",
+      "catalog_repository": "forger-ai/apps-catalog",
+      "catalog_manifest_path": "vite-fastapi-sqlite/recipes/manifest.json",
+      "checksum_sha256": "c3503668daa35ebc1fb1ce035fabef073a53f416f4c6788b45aa0f9a6c32e4ec",
+      "file_size_bytes": 105628,
+      "published_at": "2026-04-28T07:32:54Z"
+    }
+  },
+  "services": [
+    {
+      "name": "backend",
+      "type": "http",
+      "context": "./backend",
+      "port": 8000,
+      "command": "uv run fastapi dev src/app/main.py --host 0.0.0.0 --port 8000",
+      "healthcheck": "/api/health",
+      "environment": {
+        "DATABASE_URL": "sqlite:////app/data/recipes.sqlite",
+        "CORS_ORIGINS": "http://localhost:5181,http://127.0.0.1:5181"
+      },
+      "volumes": [
+        {
+          "source": "./backend",
+          "target": "/app"
+        },
+        {
+          "source": "./backend/data",
+          "target": "/app/data",
+          "persist": true
+        }
+      ]
+    },
+    {
+      "name": "frontend",
+      "type": "http",
+      "context": "./frontend",
+      "port": 5181,
+      "command": "npm run dev -- --host 0.0.0.0 --port 5181",
+      "environment": {
+        "VITE_API_BASE_URL": "http://localhost:8000"
+      },
+      "depends_on": [
+        "backend"
+      ]
+    }
+  ],
+  "scripts": {
+    "verify": "cd backend && uv run pytest && cd ../frontend && npm run verify"
+  },
+  "skills": [
+    "./skills/stack-database-extension"
+  ]
+}

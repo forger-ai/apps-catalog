@@ -1,12 +1,8 @@
 name: Publish catalog
 
 on:
-  repository_dispatch:
-    types: [app-released]
   push:
     branches: [main]
-    paths:
-      - registry.json
   workflow_dispatch:
 
 permissions:
@@ -26,13 +22,15 @@ jobs:
 
       - name: Generate catalog.json
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
         run: python3 scripts/generate_catalog.py --out catalog.json
 
       - name: Prepare pages output
         run: |
           mkdir -p _site
           cp catalog.json _site/catalog.json
+          # Minimal index so the URL is browsable
           echo '{"catalog":"catalog.json","repo":"${{ github.repository }}"}' > _site/index.json
 
       - uses: actions/upload-pages-artifact@v3

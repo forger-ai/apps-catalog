@@ -1,106 +1,106 @@
 # AGENTS
 
-## Fuente de Verdad
+## Source of Truth
 
-Este repo contiene el catálogo público de apps que lee la aplicación desktop de Forger.
+This repo contains the public app catalog read by the Forger desktop application.
 
-El catálogo no es la fuente principal de implementación de las apps. Cada app mantiene su código, releases, CI e historial en su propio repositorio. Este repo contiene la metadata publicada y aprobada que permite a la desktop descubrir, descargar e instalar apps.
+The catalog is not the main implementation source for apps. Each app keeps its code, releases, CI, and history in its own repository. This repo contains published and approved metadata that lets desktop discover, download, and install apps.
 
-Cuando un repo de app publica una nueva versión, su workflow de release abre un PR contra este repo para actualizar el manifest de esa app dentro del catálogo. Al aprobarse y mergearse ese PR, el workflow de catálogo regenera `catalog.json` y lo publica en GitHub Pages.
+When an app repo publishes a new version, its release workflow opens a PR against this repo to update that app manifest inside the catalog. When that PR is approved and merged, the catalog workflow regenerates `catalog.json` and publishes it on GitHub Pages.
 
-## Rol del Catálogo
+## Catalog Role
 
-El catálogo es el contrato publicado entre apps instalables y la app desktop.
+The catalog is the published contract between installable apps and the desktop app.
 
-La desktop usa el catálogo para saber:
+Desktop uses the catalog to know:
 
-- qué apps están disponibles;
-- qué versión está publicada;
-- qué stack runtime usa cada app;
-- qué plataformas soporta;
-- qué permisos declara;
-- desde qué URL descarga el ZIP instalable;
-- qué checksum, tamaño y fecha de publicación corresponden al ZIP cuando están disponibles;
-- qué metadata visible debe mostrar al usuario.
+- which apps are available;
+- which version is published;
+- which runtime stack each app uses;
+- which platforms are supported;
+- which permissions are declared;
+- which URL downloads the installable ZIP;
+- which checksum, size, and publish date correspond to the ZIP when available;
+- which visible metadata should be shown to the user.
 
-El catálogo no debe inventar capacidades de producto. Las capacidades visibles de cada app se documentan en el `AGENTS.md` y documentación interna del repo de esa app.
+The catalog must not invent product capabilities. Visible capabilities for each app are documented in the app repo `AGENTS.md` and internal documentation.
 
-## Estructura Actual
+## Current Structure
 
 ```text
 {stack-name}/
-  commons/      Copia publicada de piezas compartidas del stack cuando aplica
-  skeleton/     Base publicada del stack cuando aplica
-  {app-name}/   Metadata publicada de una app instalable
+  commons/      Published copy of shared stack pieces when applicable
+  skeleton/     Published stack base when applicable
+  {app-name}/   Published metadata for an installable app
 
 scripts/
-  generate_catalog.py   Genera catalog.json desde manifests y metadata de releases
-  build_setup.sh        Herramienta interna para preparar commons en estructura de compatibilidad
-  build_check.sh        Herramienta interna de verificación
-  build_package.sh      Herramienta interna de empaquetado de compatibilidad
+  generate_catalog.py   Generates catalog.json from manifests and release metadata
+  build_setup.sh        Internal tool for preparing commons in compatibility structure
+  build_check.sh        Internal verification tool
+  build_package.sh      Internal compatibility packaging tool
 
 .github/
   workflows/
-    catalog.yml         Genera catalog.json y publica GitHub Pages
-    validate.yml        Valida cambios del catálogo
+    catalog.yml         Generates catalog.json and publishes GitHub Pages
+    validate.yml        Validates catalog changes
 ```
 
-El stack publicado actualmente es `vite-fastapi-sqlite`.
+The currently published stack is `vite-fastapi-sqlite`.
 
-La app publicada actualmente en ese stack es `finance-os`.
+The currently published app in that stack is `finance-os`.
 
-## Flujo de Publicación Actual
+## Current Publication Flow
 
-El flujo de publicación de una app hacia el catálogo funciona así:
+The publication flow from an app to the catalog works as follows:
 
-1. La app vive y se desarrolla en su propio repositorio.
-2. La app define su metadata en `manifest.json`.
-3. La app define en `catalog.release` el repo de release, formato de tag, nombre del asset ZIP, repo del catálogo y ruta del manifest dentro del catálogo.
-4. Al publicarse una release/tag válida, el workflow del repo de la app verifica backend y frontend.
-5. El workflow construye el ZIP instalable.
-6. El workflow calcula checksum, tamaño y fecha de publicación.
-7. El workflow sube el ZIP al GitHub Release de la app.
-8. El workflow hace checkout de este repo de catálogo.
-9. El workflow actualiza el manifest publicado de la app en la ruta configurada.
-10. El workflow abre un PR automático contra `main`.
-11. Una persona o agente revisa el PR.
-12. Al mergearse el PR, `catalog.yml` genera `catalog.json`.
-13. GitHub Pages publica el `catalog.json`.
-14. La app desktop lee el catálogo publicado.
+1. The app lives and is developed in its own repository.
+2. The app defines metadata in `manifest.json`.
+3. The app defines `catalog.release` with the release repo, tag format, ZIP asset name, catalog repo, and manifest path inside the catalog.
+4. When a valid release/tag is published, the app repo workflow verifies backend and frontend.
+5. The workflow builds the installable ZIP.
+6. The workflow calculates checksum, size, and publish date.
+7. The workflow uploads the ZIP to the app GitHub Release.
+8. The workflow checks out this catalog repo.
+9. The workflow updates the published app manifest at the configured path.
+10. The workflow opens an automatic PR against `main`.
+11. A person or agent reviews the PR.
+12. When the PR is merged, `catalog.yml` generates `catalog.json`.
+13. GitHub Pages publishes `catalog.json`.
+14. The desktop app reads the published catalog.
 
-La aprobación del PR es el punto de control del catálogo. Una release de app no queda disponible para la desktop hasta que el cambio correspondiente entra al catálogo publicado.
+PR approval is the catalog control point. An app release is not available to desktop until the corresponding change enters the published catalog.
 
 ## `manifest.json`
 
-Cada app publicada en el catálogo tiene un `manifest.json` en su carpeta de app.
+Each published app in the catalog has a `manifest.json` in its app folder.
 
-Campos funcionales relevantes:
+Relevant functional fields:
 
-- `name`: slug técnico estable de la app.
-- `version`: versión publicada que la desktop considera disponible.
-- `description`: descripción general de la app.
-- `changelog`: lista de cambios visibles por versión publicada.
-- `stack`: metadata del backend, frontend, base de datos y versiones requeridas.
-- `catalog.display_name`: nombre visible en catálogo.
-- `catalog.short_description`: resumen corto.
-- `catalog.description`: descripción visible más completa.
-- `catalog.category`: categoría visible.
-- `catalog.permissions`: permisos declarados para la app.
-- `catalog.supported_platforms`: plataformas soportadas.
-- `catalog.release.repository`: repo donde vive el GitHub Release con el ZIP.
-- `catalog.release.tag_template`: formato del tag publicado.
-- `catalog.release.asset_name_template`: formato del ZIP publicado.
-- `catalog.release.checksum_sha256`: checksum del ZIP publicado cuando está registrado.
-- `catalog.release.file_size_bytes`: tamaño del ZIP publicado cuando está registrado.
-- `catalog.release.published_at`: fecha de publicación cuando está registrada.
+- `name`: stable technical app slug.
+- `version`: published version considered available by desktop.
+- `description`: general app description.
+- `changelog`: list of visible changes by published version.
+- `stack`: backend, frontend, database, and required version metadata.
+- `catalog.display_name`: visible name in catalog.
+- `catalog.short_description`: short summary.
+- `catalog.description`: fuller visible description.
+- `catalog.category`: visible category.
+- `catalog.permissions`: declared app permissions.
+- `catalog.supported_platforms`: supported platforms.
+- `catalog.release.repository`: repo where the GitHub Release with the ZIP lives.
+- `catalog.release.tag_template`: published tag format.
+- `catalog.release.asset_name_template`: published ZIP format.
+- `catalog.release.checksum_sha256`: ZIP checksum when registered.
+- `catalog.release.file_size_bytes`: ZIP size when registered.
+- `catalog.release.published_at`: publish date when registered.
 
-El manifest puede contener servicios, scripts y skills. Esos campos ayudan a la desktop y al agente a operar la app instalada. No son una lista de capacidades visibles para usuario final.
+The manifest can contain services, scripts, and skills. Those fields help desktop and the agent operate the installed app. They are not a list of visible capabilities for the final user.
 
 ## `catalog.json`
 
-`scripts/generate_catalog.py` lee los manifests publicados bajo carpetas de stack y genera `catalog.json`.
+`scripts/generate_catalog.py` reads published manifests under stack folders and generates `catalog.json`.
 
-La salida contiene una lista de apps con:
+The output contains a list of apps with:
 
 - `slug`;
 - `name`;
@@ -110,64 +110,64 @@ La salida contiene una lista de apps con:
 - `runtime_stack`;
 - `latest_version`.
 
-`latest_version` contiene metadata de instalación:
+`latest_version` contains installation metadata:
 
 - `version`;
 - `runtime_stack`;
-- versiones requeridas de Python y Node;
-- plataformas soportadas;
-- permisos;
-- URL de descarga;
-- tamaño;
+- required Python and Node versions;
+- supported platforms;
+- permissions;
+- download URL;
+- size;
 - checksum;
-- fecha de publicación.
-- changelog de la versión publicada cuando está declarado.
+- publish date;
+- changelog for the published version when declared.
 
-El script intenta leer metadata del GitHub Release usando `gh release view`. Si hay asset esperado configurado, la URL de descarga se resuelve con el repo, tag y nombre del asset.
+The script attempts to read GitHub Release metadata using `gh release view`. If an expected asset is configured, the download URL is resolved from the repo, tag, and asset name.
 
-## Reglas Para Agentes
+## Agent Rules
 
-- Tratar este repo como catálogo publicado, no como repo principal de desarrollo de apps.
-- No modificar código de producto de una app dentro del catálogo si el cambio pertenece al repo fuente de esa app.
-- Para cambios funcionales de una app, trabajar en el repo de la app y dejar que su release actualice el catálogo por PR.
-- En este repo, revisar especialmente manifests, metadata de release, checksums, versiones, permisos y consistencia del catálogo.
-- No presentar `manifest.json`, scripts ni workflows como interfaz normal para usuarios finales.
-- Describir hacia usuario final solo el impacto visible: app disponible, versión, descripción, permisos y estado de publicación.
-- No afirmar que una app está disponible en desktop si el PR de catálogo no está mergeado y publicado.
-- No inventar capacidades de una app desde textos de marketing del catálogo; validar contra el repo de la app y su `AGENTS.md`.
-- Si una carpeta de app dentro del catálogo contiene código copiado, tratarlo como snapshot publicado o estructura de compatibilidad, no como fuente principal de verdad.
+- Treat this repo as the published catalog, not as the main development repo for apps.
+- Do not modify product code for an app inside the catalog if the change belongs in the app source repo.
+- For functional app changes, work in the app repo and let its release update the catalog by PR.
+- In this repo, especially review manifests, release metadata, checksums, versions, permissions, and catalog consistency.
+- Do not present `manifest.json`, scripts, or workflows as the normal interface for final users.
+- Describe only visible impact to final users: app availability, version, description, permissions, and publication status.
+- Do not say an app is available in desktop if the catalog PR has not been merged and published.
+- Do not invent app capabilities from catalog marketing copy; validate against the app repo and its `AGENTS.md`.
+- If an app folder inside the catalog contains copied code, treat it as a published snapshot or compatibility structure, not as the main source of truth.
 
-## Reglas de Cambios
+## Change Rules
 
-Cambios apropiados en este repo:
+Appropriate changes in this repo:
 
-- actualizar manifest publicado de una app;
-- revisar metadata de release;
-- corregir datos visibles del catálogo;
-- ajustar generación de `catalog.json`;
-- ajustar validaciones del catálogo;
-- mantener documentación de catálogo.
+- update a published app manifest;
+- review release metadata;
+- correct visible catalog data;
+- adjust `catalog.json` generation;
+- adjust catalog validations;
+- maintain catalog documentation.
 
-Cambios que pertenecen al repo de la app:
+Changes that belong in the app repo:
 
-- modificar backend;
-- modificar frontend;
-- modificar base de datos;
-- modificar scripts operativos de app;
-- modificar skills de app;
-- cambiar capacidades funcionales;
-- cambiar documentación funcional específica de una app.
+- modifying backend;
+- modifying frontend;
+- modifying database;
+- modifying app operational scripts;
+- modifying app skills;
+- changing functional capabilities;
+- changing app-specific functional documentation.
 
-## Comunicación
+## Communication
 
-Usar lenguaje simple cuando el usuario pregunte por el catálogo.
+Use simple language when the user asks about the catalog.
 
-Explicar el catálogo como la lista publicada de apps que la desktop puede instalar.
+Explain the catalog as the published list of apps desktop can install.
 
-Evitar detalles internos salvo que el usuario los pida explícitamente.
+Avoid internal details unless the user explicitly asks for them.
 
-Cuando se hable con un usuario final:
+When speaking with a final user:
 
-- decir "la app está disponible en el catálogo" solo si está publicada;
-- decir "hay una actualización pendiente de aprobación" si existe un PR no mergeado;
-- decir "la desktop descarga la app desde la versión publicada" en vez de explicar GitHub Releases, assets y manifests.
+- say "the app is available in the catalog" only if it is published;
+- say "there is an update pending approval" if there is an unmerged PR;
+- say "desktop downloads the app from the published version" instead of explaining GitHub Releases, assets, and manifests.

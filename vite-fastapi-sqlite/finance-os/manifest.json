@@ -1,6 +1,6 @@
 {
   "name": "finance-os",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "author": "FinanceOS",
   "license": "MIT",
@@ -43,7 +43,7 @@
   "catalog": {
     "display_name": "Finance OS",
     "short_description": "Personal finance tracker with AI assistant. Your data, your machine.",
-    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances — all without sending your data anywhere.",
+    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances \u2014 all without sending your data anywhere.",
     "category": "finance",
     "permissions": [
       "app_data",
@@ -59,9 +59,9 @@
       "repository": "forger-ai/finance-os",
       "tag_template": "{name}/v{version}",
       "asset_name_template": "{name}-{version}.zip",
-      "checksum_sha256": "b66b658ac71e10da875e14f2961b7429ab75746cfde2fbbe86bd161f5e5cfd7c",
-      "file_size_bytes": 179680,
-      "published_at": "2026-04-26T17:27:14Z"
+      "checksum_sha256": "dc76bacb84c13c26ae989c224041fb49e4f40207bf141daa8b7ad83ab9e115c9",
+      "file_size_bytes": 229416,
+      "published_at": "2026-04-28T04:59:50Z"
     }
   },
   "services": [

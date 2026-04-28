@@ -33,7 +33,13 @@
     "short_description": "One-line description shown in the Forger catalog.",
     "description": "Full description shown on the app detail page.",
     "category": "utilities",
-    "permissions": ["app_data"],
+    "capabilities": [
+      {
+        "id": "local_app_data",
+        "title": "Guardar datos locales",
+        "description": "Usa el espacio privado de la app para guardar estado y datos propios."
+      }
+    ],
     "supported_platforms": ["darwin_arm64", "darwin_x64"],
     "release": {
       "repository": "owner/app-repo",

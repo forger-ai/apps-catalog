@@ -96,6 +96,9 @@ def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
         ),
         None,
     )
+    capabilities = catalog_meta.get("capabilities")
+    if capabilities is None:
+        capabilities = catalog_meta.get("permissions", [])
 
     entry: dict = {
         "slug": name,
@@ -110,7 +113,7 @@ def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
             "required_python_version": manifest.get("stack", {}).get("backend", {}).get("python_version", ""),
             "required_node_version": manifest.get("stack", {}).get("frontend", {}).get("node_version", ""),
             "supported_platforms": catalog_meta.get("supported_platforms", ["darwin_arm64", "darwin_x64"]),
-            "permissions": catalog_meta.get("permissions", ["app_data"]),
+            "capabilities": capabilities,
             "download_url": resolved_download_url,
             "file_size_bytes": release["file_size_bytes"] if release else release_meta.get("file_size_bytes"),
             "checksum_sha256": release_meta.get("checksum_sha256"),

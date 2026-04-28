@@ -37,8 +37,12 @@
     "short_description": "A local cookbook with ingredient catalog, costs, and a weekly menu.",
     "description": "Recipes helps one person keep a local cookbook with structured ingredients, ordered steps, categories, favorites, personal notes, ratings, image references, rough cost estimates from observed ingredient prices, and a weekly menu.",
     "category": "lifestyle",
-    "permissions": [
-      "app_data"
+    "capabilities": [
+      {
+        "id": "local_recipe_data",
+        "title": "Guardar recetas localmente",
+        "description": "Mantiene recetas, ingredientes, costos y menus dentro del espacio local de la app."
+      }
     ],
     "supported_platforms": [
       "darwin_arm64",

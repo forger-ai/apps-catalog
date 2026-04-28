@@ -18,7 +18,7 @@ Desktop uses the catalog to know:
 - which version is published;
 - which runtime stack each app uses;
 - which platforms are supported;
-- which permissions are declared;
+- which capabilities are declared for transparency;
 - which URL downloads the installable ZIP;
 - which checksum, size, and publish date correspond to the ZIP when available;
 - which visible metadata should be shown to the user.
@@ -85,7 +85,7 @@ Relevant functional fields:
 - `catalog.short_description`: short summary.
 - `catalog.description`: fuller visible description.
 - `catalog.category`: visible category.
-- `catalog.permissions`: declared app permissions.
+- `catalog.capabilities`: visible app capabilities declared for transparency.
 - `catalog.supported_platforms`: supported platforms.
 - `catalog.release.repository`: repo where the GitHub Release with the ZIP lives.
 - `catalog.release.tag_template`: published tag format.
@@ -116,7 +116,7 @@ The output contains a list of apps with:
 - `runtime_stack`;
 - required Python and Node versions;
 - supported platforms;
-- permissions;
+- capabilities;
 - download URL;
 - size;
 - checksum;
@@ -130,9 +130,9 @@ The script attempts to read GitHub Release metadata using `gh release view`. If 
 - Treat this repo as the published catalog, not as the main development repo for apps.
 - Do not modify product code for an app inside the catalog if the change belongs in the app source repo.
 - For functional app changes, work in the app repo and let its release update the catalog by PR.
-- In this repo, especially review manifests, release metadata, checksums, versions, permissions, and catalog consistency.
+- In this repo, especially review manifests, release metadata, checksums, versions, capabilities, and catalog consistency.
 - Do not present `manifest.json`, scripts, or workflows as the normal interface for final users.
-- Describe only visible impact to final users: app availability, version, description, permissions, and publication status.
+- Describe only visible impact to final users: app availability, version, description, capabilities, and publication status.
 - Do not say an app is available in desktop if the catalog PR has not been merged and published.
 - Do not invent app capabilities from catalog marketing copy; validate against the app repo and its `AGENTS.md`.
 - If an app folder inside the catalog contains copied code, treat it as a published snapshot or compatibility structure, not as the main source of truth.

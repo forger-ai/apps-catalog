@@ -29,15 +29,11 @@ The catalog must not invent product capabilities. Visible capabilities for each 
 
 ```text
 {stack-name}/
-  commons/      Published copy of shared stack pieces when applicable
-  skeleton/     Published stack base when applicable
-  {app-name}/   Published metadata for an installable app
+  {app-name}/
+    manifest.json   Published metadata for an installable app
 
 scripts/
   generate_catalog.py   Generates catalog.json from manifests and release metadata
-  build_setup.sh        Internal tool for preparing commons in compatibility structure
-  build_check.sh        Internal verification tool
-  build_package.sh      Internal compatibility packaging tool
 
 .github/
   workflows/
@@ -47,7 +43,7 @@ scripts/
 
 The currently published stack is `vite-fastapi-sqlite`.
 
-The currently published app in that stack is `finance-os`.
+The currently published apps in that stack are `finance-os` and `recipes`.
 
 ## Current Publication Flow
 
@@ -98,7 +94,7 @@ The manifest can contain services, scripts, and skills. Those fields help deskto
 
 ## `catalog.json`
 
-`scripts/generate_catalog.py` reads published manifests under stack folders and generates `catalog.json`.
+`scripts/generate_catalog.py` reads published app manifests under stack folders and generates `catalog.json`.
 
 The output contains a list of apps with:
 
@@ -135,7 +131,7 @@ The script attempts to read GitHub Release metadata using `gh release view`. If 
 - Describe only visible impact to final users: app availability, version, description, capabilities, and publication status.
 - Do not say an app is available in desktop if the catalog PR has not been merged and published.
 - Do not invent app capabilities from catalog marketing copy; validate against the app repo and its `AGENTS.md`.
-- If an app folder inside the catalog contains copied code, treat it as a published snapshot or compatibility structure, not as the main source of truth.
+- App folders inside the catalog contain published metadata only. They must not contain backend code, frontend code, local databases, dependency directories, copied skeletons, or copied commons.
 
 ## Change Rules
 
@@ -157,6 +153,7 @@ Changes that belong in the app repo:
 - modifying app skills;
 - changing functional capabilities;
 - changing app-specific functional documentation.
+- packaging apps for release.
 
 ## Communication
 

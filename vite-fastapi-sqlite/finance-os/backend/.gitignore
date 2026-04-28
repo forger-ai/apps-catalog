@@ -1,9 +1,0 @@
-.venv/
-__pycache__/
-*.pyc
-*.pyo
-.ruff_cache/
-.pytest_cache/
-data/*.sqlite
-data/*.sqlite-journal
-.env

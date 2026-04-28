@@ -5,9 +5,9 @@ Generate catalog.json from app manifests + GitHub Release metadata.
 Usage:
     python3 scripts/generate_catalog.py [--out catalog.json] [--default-repo owner/repo]
 
-Reads every manifest.json found under stack directories, fetches release
-metadata for each app, and writes a catalog.json
-consumable by the Forger desktop app.
+Reads every app manifest.json found under stack directories, fetches release
+metadata for each app, and writes a catalog.json consumable by the Forger
+desktop app.
 """
 
 from __future__ import annotations
@@ -16,7 +16,6 @@ import argparse
 import json
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -28,14 +27,11 @@ def find_manifests() -> list[tuple[str, dict]]:
     for stack_dir in sorted(ROOT.iterdir()):
         if not stack_dir.is_dir() or stack_dir.name.startswith("."):
             continue
-        if not (stack_dir / "commons").is_dir():
-            continue  # not a stack folder
         for app_dir in sorted(stack_dir.iterdir()):
-            if app_dir.name in ("commons", "skeleton") or not app_dir.is_dir():
+            if not app_dir.is_dir() or app_dir.name.startswith("."):
                 continue
             manifest_path = app_dir / "manifest.json"
             if not manifest_path.exists():
-                print(f"  warn: no manifest.json in {app_dir.relative_to(ROOT)}", file=sys.stderr)
                 continue
             manifest = json.loads(manifest_path.read_text())
             results.append((stack_dir.name, manifest))

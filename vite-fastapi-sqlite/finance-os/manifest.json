@@ -4,26 +4,6 @@
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "author": "FinanceOS",
   "license": "MIT",
-  "changelog": [
-    {
-      "version": "0.1.1",
-      "summary": "Mejoras de experiencia local, agente y empaquetado para Finance OS.",
-      "changes": [
-        "Normaliza el nombre visible de la app como Finance OS.",
-        "Mejora la documentacion operacional para agentes.",
-        "Refuerza el empaquetado para distribuir la app sin metadata Git interna."
-      ]
-    },
-    {
-      "version": "0.1.0",
-      "summary": "Primera version publicada de Finance OS para Forger.",
-      "changes": [
-        "Permite registrar, importar y revisar movimientos financieros locales.",
-        "Incluye backend FastAPI, frontend Vite React y almacenamiento SQLite.",
-        "Declara scripts y skill interna para carga de movimientos."
-      ]
-    }
-  ],
   "stack": {
     "backend": {
       "language": "python",
@@ -37,13 +17,13 @@
       "framework": "react",
       "bundler": "vite",
       "ui": "mui",
-      "node_version": "20"
+      "node_version": "24"
     }
   },
   "catalog": {
     "display_name": "Finance OS",
     "short_description": "Personal finance tracker with AI assistant. Your data, your machine.",
-    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances \u2014 all without sending your data anywhere.",
+    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances — all without sending your data anywhere.",
     "category": "finance",
     "permissions": [
       "app_data",
@@ -59,6 +39,8 @@
       "repository": "forger-ai/finance-os",
       "tag_template": "{name}/v{version}",
       "asset_name_template": "{name}-{version}.zip",
+      "catalog_repository": "forger-ai/apps-catalog",
+      "catalog_manifest_path": "vite-fastapi-sqlite/finance-os/manifest.json",
       "checksum_sha256": "cbef5505a88ff44878bcfd6107798cf5e33848a94a6829d7fe5ba5e8127a5fb8",
       "file_size_bytes": 229463,
       "published_at": "2026-04-28T05:28:52Z"
@@ -104,16 +86,17 @@
   ],
   "scripts": {
     "init_db": "cd backend && uv run python scripts/init_db.py",
-    "seed": "cd backend && uv run python scripts/seed.py",
     "list_categories": "cd backend && uv run python scripts/list_categories.py",
     "list_movements": "cd backend && uv run python scripts/list_movements.py",
     "import_movements": "cd backend && uv run python scripts/import_movements.py",
     "upsert_categories": "cd backend && uv run python scripts/upsert_categories.py",
     "edit_movement": "cd backend && uv run python scripts/edit_movement.py",
     "delete_movement": "cd backend && uv run python scripts/delete_movement.py",
+    "verify_data_integrity": "cd backend && uv run python scripts/verify_data_integrity.py",
     "verify": "cd backend && uv run python scripts/verify.py"
   },
   "skills": [
-    "./skills/load-movements"
+    "./skills/load-movements",
+    "./skills/stack-database-extension"
   ]
 }

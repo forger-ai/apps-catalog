@@ -1,8 +1,16 @@
 {
   "name": "finance-os",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "changelog": [
+    {
+      "version": "0.1.6",
+      "summary": "Hardens release packaging to exclude Git metadata.",
+      "changes": [
+        "Excludes root and nested .git metadata from app release packages.",
+        "Adds a defensive cleanup pass before creating the release ZIP."
+      ]
+    },
     {
       "version": "0.1.5",
       "summary": "Improves AI-assisted imports, classification consistency, and review workflows.",
@@ -73,9 +81,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/finance-os/manifest.json",
-      "checksum_sha256": "35d5f09d41a067fac5dc19a76bda4bd8df94329f52a5d58cb668aa733f646c28",
-      "file_size_bytes": 229942,
-      "published_at": "2026-04-28T21:07:09Z"
+      "checksum_sha256": "110213745619250df70af47dcdbffb472f0bd793d482d9caddbf7c3cd697c754",
+      "file_size_bytes": 230072,
+      "published_at": "2026-04-28T21:48:24Z"
     }
   },
   "appSecrets": [

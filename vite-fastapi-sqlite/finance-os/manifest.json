@@ -1,7 +1,18 @@
 {
   "name": "finance-os",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
+  "changelog": [
+    {
+      "version": "0.1.4",
+      "summary": "Refreshes agent and install documentation.",
+      "changes": [
+        "Updates Finance OS agent guidance in English with clearer user-visible capability boundaries.",
+        "Splits post-install guidance into English and Spanish documents.",
+        "Updates README documentation to match the current local app and release flow."
+      ]
+    }
+  ],
   "author": "FinanceOS",
   "license": "MIT",
   "stack": {
@@ -23,7 +34,7 @@
   "catalog": {
     "display_name": "Finance OS",
     "short_description": "Personal finance tracker with AI assistant. Your data, your machine.",
-    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances — all without sending your data anywhere.",
+    "description": "Finance OS is a local-first personal finance app. Track income and expenses, categorize movements, import bank statements, and ask the built-in AI assistant questions about your finances \u2014 all without sending your data anywhere.",
     "category": "finance",
     "permissions": [
       "app_data",
@@ -41,9 +52,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/finance-os/manifest.json",
-      "checksum_sha256": "cbef5505a88ff44878bcfd6107798cf5e33848a94a6829d7fe5ba5e8127a5fb8",
-      "file_size_bytes": 229463,
-      "published_at": "2026-04-28T05:28:52Z"
+      "checksum_sha256": "991d109d678edbbdedcc8b2c13130669499381de42bad268df6974312817ae06",
+      "file_size_bytes": 228332,
+      "published_at": "2026-04-28T15:54:09Z"
     }
   },
   "services": [

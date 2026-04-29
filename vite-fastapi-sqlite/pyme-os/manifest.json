@@ -72,7 +72,8 @@
       "checksum_sha256": "904d9074f6c06ff9e2127d76f94abb89280af773ad3ec33369fc9e4da761fc5f",
       "file_size_bytes": 113724,
       "published_at": "2026-04-29T03:18:10Z"
-    }
+    },
+    "beta": true
   },
   "services": [
     {

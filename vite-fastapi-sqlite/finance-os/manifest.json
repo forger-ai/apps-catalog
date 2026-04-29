@@ -104,7 +104,8 @@
       "checksum_sha256": "96dc161ab3cb4a2441a9f784def8e8833dce5d08c43ba9245a9875e069fcdd60",
       "file_size_bytes": 206084,
       "published_at": "2026-04-29T03:04:48Z"
-    }
+    },
+    "beta": true
   },
   "promptTemplates": [
     {

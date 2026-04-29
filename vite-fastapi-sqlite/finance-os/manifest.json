@@ -1,8 +1,17 @@
 {
   "name": "finance-os",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "changelog": [
+    {
+      "version": "0.1.8",
+      "summary": "Adds structured MCP tools for Forger agents.",
+      "changes": [
+        "Declares the Finance OS MCP server in the app manifest.",
+        "Adds structured MCP tools for categories, subcategories, movements, movement edits and deletes, and CSV imports.",
+        "Keeps Finance OS data operations behind app validations instead of direct database manipulation."
+      ]
+    },
     {
       "version": "0.1.7",
       "summary": "Adds Codex-assisted statement imports through Forger Desktop.",
@@ -92,9 +101,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/finance-os/manifest.json",
-      "checksum_sha256": "c46a7a8fe1713e2fb491512a58c23576dccc739153dbff9583e54cec4d74ae73",
-      "file_size_bytes": 201214,
-      "published_at": "2026-04-29T01:03:27Z"
+      "checksum_sha256": "96dc161ab3cb4a2441a9f784def8e8833dce5d08c43ba9245a9875e069fcdd60",
+      "file_size_bytes": 206084,
+      "published_at": "2026-04-29T03:04:48Z"
     }
   },
   "promptTemplates": [
@@ -170,6 +179,17 @@
       ]
     }
   ],
+  "mcp": {
+    "type": "http",
+    "context": "./backend",
+    "command": "python -m app.mcp_server",
+    "healthcheck": "/health",
+    "environment": {
+      "DATABASE_URL": "sqlite:////app/data/finance_os.sqlite",
+      "PYTHONPATH": "."
+    },
+    "toolTimeoutSec": 600
+  },
   "scripts": {
     "init_db": "cd backend && uv run python scripts/init_db.py",
     "list_categories": "cd backend && uv run python scripts/list_categories.py",

@@ -102,6 +102,7 @@ def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
         "short_description": catalog_meta.get("short_description", ""),
         "description": catalog_meta.get("description", manifest.get("description", "")),
         "category": catalog_meta.get("category", "utilities"),
+        "beta": bool(catalog_meta.get("beta", False)),
         "runtime_stack": stack.replace("-", "_"),
         "latest_version": {
             "version": version,

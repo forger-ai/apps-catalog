@@ -43,7 +43,7 @@ scripts/
 
 The currently published stack is `vite-fastapi-sqlite`.
 
-The currently published apps in that stack are `finance-os` and `recipes`.
+The currently published apps in that stack are `finance-os`, `recipes`, and `pyme-os`.
 
 ## Current Publication Flow
 

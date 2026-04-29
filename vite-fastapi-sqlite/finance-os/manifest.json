@@ -1,8 +1,15 @@
 {
   "name": "finance-os",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "changelog": [
+    {
+      "version": "0.1.9",
+      "summary": "Marks the app as beta in Forger catalog surfaces.",
+      "changes": [
+        "Adds beta metadata so Forger can label the app in catalog and installed-app cards."
+      ]
+    },
     {
       "version": "0.1.8",
       "summary": "Adds structured MCP tools for Forger agents.",
@@ -101,9 +108,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/finance-os/manifest.json",
-      "checksum_sha256": "96dc161ab3cb4a2441a9f784def8e8833dce5d08c43ba9245a9875e069fcdd60",
-      "file_size_bytes": 206084,
-      "published_at": "2026-04-29T03:04:48Z"
+      "checksum_sha256": "1427856c820de9479a664944952e9697c8f4930dd190a50a9001607c29cb9b94",
+      "file_size_bytes": 206147,
+      "published_at": "2026-04-29T22:56:05Z"
     },
     "beta": true
   },
@@ -151,7 +158,7 @@
       "command": "uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
       "healthcheck": "/health",
       "environment": {
-        "DATABASE_URL": "sqlite:////app/data/finance_os.sqlite",
+        "DATABASE_URL": "sqlite:///{app_data}/finance_os.sqlite",
         "CORS_ORIGINS": "http://localhost:5180,http://127.0.0.1:5180"
       },
       "volumes": [
@@ -186,7 +193,7 @@
     "command": "python -m app.mcp_server",
     "healthcheck": "/health",
     "environment": {
-      "DATABASE_URL": "sqlite:////app/data/finance_os.sqlite",
+      "DATABASE_URL": "sqlite:///{app_data}/finance_os.sqlite",
       "PYTHONPATH": "."
     },
     "toolTimeoutSec": 600

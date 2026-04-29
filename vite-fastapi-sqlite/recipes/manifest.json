@@ -1,8 +1,17 @@
 {
   "name": "recipes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local recipe manager for Forger with structured ingredients, steps, categories, favorites, notes, images, observed ingredient prices, and a weekly menu.",
   "changelog": [
+    {
+      "version": "0.1.1",
+      "summary": "Adds structured MCP tools for Forger agents.",
+      "changes": [
+        "Declares the Recipes MCP server in the app manifest.",
+        "Adds structured MCP tools for recipes, ingredients, and weekly planning.",
+        "Gives Forger agents a validated app interface for recipe data operations."
+      ]
+    },
     {
       "version": "0.1.0",
       "summary": "Initial Recipes app.",
@@ -54,9 +63,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/recipes/manifest.json",
-      "checksum_sha256": "c3503668daa35ebc1fb1ce035fabef073a53f416f4c6788b45aa0f9a6c32e4ec",
-      "file_size_bytes": 105628,
-      "published_at": "2026-04-28T07:32:54Z"
+      "checksum_sha256": "0d27aff3f54dd9fadda30675f0e63b8601f13b97be0a0d8eaa5f860723a8708f",
+      "file_size_bytes": 110573,
+      "published_at": "2026-04-29T03:04:55Z"
     }
   },
   "services": [
@@ -97,6 +106,17 @@
       ]
     }
   ],
+  "mcp": {
+    "type": "http",
+    "context": "./backend",
+    "command": "python -m app.mcp_server",
+    "healthcheck": "/health",
+    "environment": {
+      "DATABASE_URL": "sqlite:////app/data/recipes.sqlite",
+      "PYTHONPATH": "./src"
+    },
+    "toolTimeoutSec": 600
+  },
   "scripts": {
     "verify": "cd backend && uv run pytest && cd ../frontend && npm run verify"
   },

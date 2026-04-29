@@ -1,8 +1,15 @@
 {
   "name": "pyme-os",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local-first payroll and HR app for Chilean SMBs (Pymes). FastAPI backend, Vite + React frontend, SQLite storage.",
   "changelog": [
+    {
+      "version": "0.1.1",
+      "summary": "Marks the app as beta in Forger catalog surfaces.",
+      "changes": [
+        "Adds beta metadata so Forger can label the app in catalog and installed-app cards."
+      ]
+    },
     {
       "version": "0.1.0",
       "summary": "Initial scaffolding with employees, vacations, payslips, and Previred export structure.",
@@ -69,9 +76,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/pyme-os/manifest.json",
-      "checksum_sha256": "904d9074f6c06ff9e2127d76f94abb89280af773ad3ec33369fc9e4da761fc5f",
-      "file_size_bytes": 113724,
-      "published_at": "2026-04-29T03:18:10Z"
+      "checksum_sha256": "72d79571407208c31b9bea1ae0683e493e16a4a2ee21371d29617bd11e379701",
+      "file_size_bytes": 113810,
+      "published_at": "2026-04-29T22:55:18Z"
     },
     "beta": true
   },
@@ -84,7 +91,7 @@
       "command": "uv run fastapi dev src/app/main.py --host 0.0.0.0 --port 8000",
       "healthcheck": "/api/health",
       "environment": {
-        "DATABASE_URL": "sqlite:////app/data/pyme_os.sqlite",
+        "DATABASE_URL": "sqlite:///{app_data}/pyme_os.sqlite",
         "CORS_ORIGINS": "http://localhost:5181,http://127.0.0.1:5181",
         "PAYROLL_CONSTANTS_DIR": "/app/config/cl"
       },
@@ -124,7 +131,7 @@
     "command": "python -m app.mcp_server",
     "healthcheck": "/health",
     "environment": {
-      "DATABASE_URL": "sqlite:////app/data/pyme_os.sqlite",
+      "DATABASE_URL": "sqlite:///{app_data}/pyme_os.sqlite",
       "PAYROLL_CONSTANTS_DIR": "./config/cl",
       "PYTHONPATH": "./src"
     },

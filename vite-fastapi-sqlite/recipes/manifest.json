@@ -1,8 +1,15 @@
 {
   "name": "recipes",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Local recipe manager for Forger with structured ingredients, steps, categories, favorites, notes, images, observed ingredient prices, and a weekly menu.",
   "changelog": [
+    {
+      "version": "0.1.2",
+      "summary": "Marks the app as beta in Forger catalog surfaces.",
+      "changes": [
+        "Adds beta metadata so Forger can label the app in catalog and installed-app cards."
+      ]
+    },
     {
       "version": "0.1.1",
       "summary": "Adds structured MCP tools for Forger agents.",
@@ -63,9 +70,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/recipes/manifest.json",
-      "checksum_sha256": "0d27aff3f54dd9fadda30675f0e63b8601f13b97be0a0d8eaa5f860723a8708f",
-      "file_size_bytes": 110573,
-      "published_at": "2026-04-29T03:04:55Z"
+      "checksum_sha256": "dae069d4978c84a7a2752223e4145690bb6a894d42881f0d8f51861804f886fe",
+      "file_size_bytes": 110657,
+      "published_at": "2026-04-29T22:55:16Z"
     },
     "beta": true
   },
@@ -78,7 +85,7 @@
       "command": "uv run fastapi dev src/app/main.py --host 0.0.0.0 --port 8000",
       "healthcheck": "/api/health",
       "environment": {
-        "DATABASE_URL": "sqlite:////app/data/recipes.sqlite",
+        "DATABASE_URL": "sqlite:///{app_data}/recipes.sqlite",
         "CORS_ORIGINS": "http://localhost:5181,http://127.0.0.1:5181"
       },
       "volumes": [
@@ -113,7 +120,7 @@
     "command": "python -m app.mcp_server",
     "healthcheck": "/health",
     "environment": {
-      "DATABASE_URL": "sqlite:////app/data/recipes.sqlite",
+      "DATABASE_URL": "sqlite:///{app_data}/recipes.sqlite",
       "PYTHONPATH": "./src"
     },
     "toolTimeoutSec": 600

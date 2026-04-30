@@ -1,8 +1,17 @@
 {
   "name": "finance-os",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Personal finance app: FastAPI backend, Vite + React frontend, SQLite storage. Designed to run locally via Docker Compose or Forger.",
   "changelog": [
+    {
+      "version": "0.1.10",
+      "summary": "Aligns backend packaging with the shared stack source layout.",
+      "changes": [
+        "Moves the backend app package under backend/src for the current stack contract.",
+        "Updates service, MCP, and internal script commands to run with the src-based Python path.",
+        "Keeps Finance OS install and agent operations compatible with current Forger Desktop app runtime expectations."
+      ]
+    },
     {
       "version": "0.1.9",
       "summary": "Marks the app as beta in Forger catalog surfaces.",
@@ -108,9 +117,9 @@
       "asset_name_template": "{name}-{version}.zip",
       "catalog_repository": "forger-ai/apps-catalog",
       "catalog_manifest_path": "vite-fastapi-sqlite/finance-os/manifest.json",
-      "checksum_sha256": "1427856c820de9479a664944952e9697c8f4930dd190a50a9001607c29cb9b94",
-      "file_size_bytes": 206147,
-      "published_at": "2026-04-29T22:56:05Z"
+      "checksum_sha256": "74ae1c9044e216447fa38b0b920013a8c9ef1e61ad1fa20977ee93467c29b826",
+      "file_size_bytes": 208130,
+      "published_at": "2026-04-30T16:36:57Z"
     },
     "beta": true
   },
@@ -155,7 +164,7 @@
       "type": "http",
       "context": "./backend",
       "port": 8000,
-      "command": "uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
+      "command": "uv run fastapi dev src/app/main.py --host 0.0.0.0 --port 8000",
       "healthcheck": "/health",
       "environment": {
         "DATABASE_URL": "sqlite:///{app_data}/finance_os.sqlite",
@@ -194,20 +203,20 @@
     "healthcheck": "/health",
     "environment": {
       "DATABASE_URL": "sqlite:///{app_data}/finance_os.sqlite",
-      "PYTHONPATH": "."
+      "PYTHONPATH": "./src"
     },
     "toolTimeoutSec": 600
   },
   "scripts": {
-    "init_db": "cd backend && uv run python scripts/init_db.py",
-    "list_categories": "cd backend && uv run python scripts/list_categories.py",
-    "list_movements": "cd backend && uv run python scripts/list_movements.py",
-    "import_movements": "cd backend && uv run python scripts/import_movements.py",
-    "upsert_categories": "cd backend && uv run python scripts/upsert_categories.py",
-    "edit_movement": "cd backend && uv run python scripts/edit_movement.py",
-    "delete_movement": "cd backend && uv run python scripts/delete_movement.py",
-    "verify_data_integrity": "cd backend && uv run python scripts/verify_data_integrity.py",
-    "verify": "cd backend && uv run python scripts/verify.py"
+    "init_db": "cd backend && PYTHONPATH=./src uv run python scripts/init_db.py",
+    "list_categories": "cd backend && PYTHONPATH=./src uv run python scripts/list_categories.py",
+    "list_movements": "cd backend && PYTHONPATH=./src uv run python scripts/list_movements.py",
+    "import_movements": "cd backend && PYTHONPATH=./src uv run python scripts/import_movements.py",
+    "upsert_categories": "cd backend && PYTHONPATH=./src uv run python scripts/upsert_categories.py",
+    "edit_movement": "cd backend && PYTHONPATH=./src uv run python scripts/edit_movement.py",
+    "delete_movement": "cd backend && PYTHONPATH=./src uv run python scripts/delete_movement.py",
+    "verify_data_integrity": "cd backend && PYTHONPATH=./src uv run python scripts/verify_data_integrity.py",
+    "verify": "cd backend && PYTHONPATH=./src uv run python scripts/verify.py"
   },
   "skills": [
     "./skills/load-movements",

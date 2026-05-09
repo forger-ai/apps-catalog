@@ -30,6 +30,9 @@ jobs:
         run: |
           mkdir -p _site
           cp catalog.json _site/catalog.json
+          if [ -d assets ]; then
+            cp -R assets _site/assets
+          fi
           # Minimal index so the URL is browsable
           echo '{"catalog":"catalog.json","repo":"${{ github.repository }}"}' > _site/index.json
 

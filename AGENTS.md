@@ -31,6 +31,7 @@ The catalog must not invent product capabilities. Visible capabilities for each 
 {stack-name}/
   {app-name}/
     manifest.json   Published metadata for an installable app
+    assets/         Optional catalog assets referenced by manifest metadata
 
 scripts/
   generate_catalog.py   Generates catalog.json from manifests and release metadata
@@ -81,6 +82,7 @@ Relevant functional fields:
 - `catalog.short_description`: short summary.
 - `catalog.description`: fuller visible description.
 - `catalog.category`: visible category.
+- `catalog.icon_path`: optional local catalog icon path inside the app catalog folder.
 - `catalog.capabilities`: visible app capabilities declared for transparency.
 - `catalog.supported_platforms`: supported platforms.
 - `catalog.release.repository`: repo where the GitHub Release with the ZIP lives.
@@ -103,6 +105,7 @@ The output contains a list of apps with:
 - `short_description`;
 - `description`;
 - `category`;
+- `icon_url` when an app provides a catalog icon;
 - `runtime_stack`;
 - `latest_version`.
 

@@ -15,14 +15,15 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def find_manifests() -> list[tuple[str, dict]]:
-    """Walk stack dirs and collect (stack_name, manifest_data) for each app."""
+def find_manifests() -> list[tuple[str, Path, dict]]:
+    """Walk stack dirs and collect (stack_name, app_dir, manifest_data) for each app."""
     results = []
     for stack_dir in sorted(ROOT.iterdir()):
         if not stack_dir.is_dir() or stack_dir.name.startswith("."):
@@ -34,7 +35,7 @@ def find_manifests() -> list[tuple[str, dict]]:
             if not manifest_path.exists():
                 continue
             manifest = json.loads(manifest_path.read_text())
-            results.append((stack_dir.name, manifest))
+            results.append((stack_dir.name, app_dir, manifest))
     return results
 
 
@@ -64,7 +65,29 @@ def gh_release_asset(repo: str, tag: str, expected_asset: str | None = None) -> 
         return None
 
 
-def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
+def public_asset_path(stack: str, app_dir: Path, manifest: dict, out_path: Path) -> str | None:
+    catalog_meta = manifest.get("catalog", {})
+    icon_path = catalog_meta.get("icon_path")
+    if not icon_path or not isinstance(icon_path, str):
+        return None
+
+    source = (app_dir / icon_path).resolve()
+    try:
+        source.relative_to(app_dir.resolve())
+    except ValueError:
+        raise ValueError(f"{manifest.get('name')} catalog.icon_path must stay inside the app catalog folder")
+
+    if not source.is_file():
+        return None
+
+    relative_asset = Path("assets") / stack / manifest.get("name", app_dir.name) / Path(icon_path).name
+    destination = out_path.parent / relative_asset
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, destination)
+    return str(relative_asset)
+
+
+def build_entry(stack: str, app_dir: Path, manifest: dict, default_repo: str, out_path: Path) -> dict | None:
     name = manifest.get("name", "")
     version = manifest.get("version", "0.0.0")
     catalog_meta = manifest.get("catalog", {})
@@ -96,12 +119,15 @@ def build_entry(stack: str, manifest: dict, default_repo: str) -> dict | None:
     if capabilities is None:
         capabilities = catalog_meta.get("permissions", [])
 
+    icon_url = public_asset_path(stack, app_dir, manifest, out_path)
+
     entry: dict = {
         "slug": name,
         "name": catalog_meta.get("display_name", name),
         "short_description": catalog_meta.get("short_description", ""),
         "description": catalog_meta.get("description", manifest.get("description", "")),
         "category": catalog_meta.get("category", "utilities"),
+        "icon_url": icon_url,
         "beta": bool(catalog_meta.get("beta", False)),
         "runtime_stack": stack.replace("-", "_"),
         "latest_version": {
@@ -134,17 +160,17 @@ def main() -> None:
     parser.add_argument("--default-repo", default=os.getenv("GITHUB_REPO", "forger-ai/apps-catalog"))
     args = parser.parse_args()
 
+    out_path = Path(args.out)
     manifests = find_manifests()
     print(f"Found {len(manifests)} app(s)")
 
     catalog = []
-    for stack, manifest in manifests:
+    for stack, app_dir, manifest in manifests:
         print(f"  building entry: {manifest.get('name')} ({stack})")
-        entry = build_entry(stack, manifest, args.default_repo)
+        entry = build_entry(stack, app_dir, manifest, args.default_repo, out_path)
         if entry:
             catalog.append(entry)
 
-    out_path = Path(args.out)
     out_path.write_text(json.dumps(catalog, indent=2))
     print(f"✓ wrote {out_path} ({len(catalog)} entries)")
 
